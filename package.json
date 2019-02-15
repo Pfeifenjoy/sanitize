@@ -1,31 +1,36 @@
 {
   "name": "@arwed/sanitizer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library for asserting the correct form of objects.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run flow && npm run lint",
-    "clean": "rm -rf build",
-    "flow": "flow",
-    "lint": "eslint src",
-    "build:flow": "flow-copy-source src build",
-    "build:babel": "babel src --out-dir build",
+    "test": "npm run test:flow && npm run test:lint && npm run test:mocha",
+    "test:flow": "flow",
+    "test:lint": "eslint src",
+    "test:mocha": "mocha --require @babel/register --require @babel/polyfill --use_strict",
     "build": "npm run build:babel && npm run build:flow",
+    "build:babel": "babel src --out-dir build",
+    "build:flow": "flow-copy-source src build",
     "install:flowtyped": "flow-typed install",
-    "postinstall": "npm run install:flowtyped"
+    "postinstall": "npm run install:flowtyped",
+    "clean": "rm -rf build"
   },
   "author": "Arwed Mett",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
+    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.14.1",
     "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-mocha": "^5.3.0",
     "flow-bin": "^0.93.0",
     "flow-copy-source": "^2.0.3",
-    "flow-typed": "^2.5.1"
+    "flow-typed": "^2.5.1",
+    "mocha": "^6.0.0"
   }
 }
