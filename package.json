@@ -1,17 +1,16 @@
 {
   "name": "@arwed/sanitize",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A library for asserting the correct form of objects.",
   "main": "index.js",
   "scripts": {
     "test": "npm run test:flow && npm run test:lint && npm run test:mocha",
-    "test:flow": "flow",
+    "test:flow": "flow --quiet",
     "test:lint": "eslint src test",
     "test:mocha": "mocha --use_strict --require @babel/register --require @babel/polyfill",
     "build": "npm run build:babel && npm run build:flow",
     "build:babel": "babel src --out-dir build",
     "build:flow": "flow-copy-source src build",
-    "install:flowtyped": "flow-typed install",
     "clean": "rm -rf build"
   },
   "repository": {
