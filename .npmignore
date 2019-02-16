@@ -8,3 +8,4 @@ test
 .flowconfig
 .tern-port
 .gitignore
+.core.yml
