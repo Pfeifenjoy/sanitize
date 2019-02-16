@@ -8,6 +8,7 @@ export type Description = {
 	constraint?: Property => boolean,
 	default?: Property,
 	children?: Children,
-	element_description?: Description
+	element_description?: Description,
+	alternatives?: Array<Description>
 }
 

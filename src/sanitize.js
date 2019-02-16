@@ -9,9 +9,11 @@ import {
 
 import {
 	SanitizeError,
+	ObjectError,
 	UndefinedAttribute,
 	UnexpectedType,
 	ConstraintError,
+	VariantError,
 	Exception
 } from "./exception"
 
@@ -22,14 +24,15 @@ import type {
 
 import {
 	is_object,
-	is_attribute
+	is_attribute,
+	is_variant
 } from "./checker"
 
 /**
  * Basic test for a description.
  */
 const assert_description = (description: Description) => {
-	assert(is_object(description) || is_attribute(description),
+	assert(is_object(description) || is_attribute(description) || is_variant(description),
 		`Unknown description type: ${ description.type }`)
 	assert(implies(!is_object(description))(description.children === undefined),
 		"Ill formed description: Only Objects can have children.")
@@ -68,15 +71,25 @@ const sanitize_basic = (description: Description) => (object: *) => {
 }
 
 const sanitize_attribute = (description: Description) => (attribute: any): Property => {
+	attribute = sanitize_basic(description)(attribute)
+
 	//sanitize elements of array for description
 	if(attribute instanceof Array && description.element_description !== undefined) {
-		return attribute.map(sanitize(description.element_description))
+		try {
+			return attribute.map(sanitize(description.element_description))
+		} catch(e) {
+			if(e instanceof SanitizeError) {
+				throw e.error
+			}
+		}
 	}
 
 	return attribute
 }
 
 const sanitize_object = (description: Description) => (object: Object) => {
+	object = sanitize_basic(description)(object)
+
 	if(!(typeof object === "object" && !(object instanceof Array) && object !== null)) {
 		assert(false, "Somehow sanitize_basic did not check the type")
 		throw new Exception() //help flow detect the type
@@ -88,25 +101,57 @@ const sanitize_object = (description: Description) => (object: Object) => {
 		try {
 			result[child_key] = sanitize(child_description)(object[child_key])
 		} catch(e) {
-			//catch errors and set path and original object
-			const sanitize_exception = e instanceof SanitizeError ?
-				e.object = object : new SanitizeError(object, e)
-			sanitize_exception.add_key(child_key)
-			throw sanitize_exception
+			const error = (() => {
+				if(e instanceof SanitizeError) {
+					return new ObjectError(object, e.error)
+				} else if(e instanceof ObjectError) {
+					return e
+				} else {
+					return new ObjectError(object, e)
+				}
+			})()
+			error.object = object
+			error.add_key(child_key)
+			throw error
 		}
 	}
 	return result
 }
 
+const sanitize_variant = (description: Description) => (object: any) => {
+	assert(description.alternatives instanceof Array, "no alternative provided to variant")
+	const alternatives = description.alternatives || [ ]
+
+	let variant = 0
+	const errors = [ ]
+	for(const alternative of alternatives) {
+		try {
+			return { variant, data: sanitize(alternative)(object) }
+		} catch(e) {
+			errors.push(e)
+		}
+		variant += 1
+	}
+
+	throw new VariantError(description, object, errors)
+}
+
 const sanitize = (description: Description) => (object: any) => {
 	assert_description(description)
-	object = sanitize_basic(description)(object)
 
-	if(is_attribute(description)) {
-		return sanitize_attribute(description)(object)
-	} else if(is_object(description)) {
-		return sanitize_object(description)(object)
+	try {
+		if(is_attribute(description)) {
+			return sanitize_attribute(description)(object)
+		} else if(is_object(description)) {
+			return sanitize_object(description)(object)
+		} else if(is_variant(description)) {
+			return sanitize_variant(description)(object)
+		}
+	} catch(e) {
+		throw new SanitizeError(e)
 	}
+
+	assert(false, `description has unknown type: ${ description.type }`)
 }
 
 export default sanitize

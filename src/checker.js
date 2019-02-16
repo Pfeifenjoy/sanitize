@@ -16,6 +16,8 @@ export const is_array = check("array")
 
 export const is_string = check("string")
 
+export const is_variant = check("variant")
+
 export const is_attribute = (description: Description): boolean =>
 	is_string(description) || is_number(description) || is_boolean(description)
 		|| is_null(description) || is_array(description)

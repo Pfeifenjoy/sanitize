@@ -7,10 +7,17 @@ import sanitize, {
 	number,
 	string,
 	boolean,
+	variant,
 	get_boolean,
+	get_variant,
 	fallback
 } from "../src"
-import { SanitizeError, UnexpectedType, UndefinedAttribute } from "../src/exception"
+import {
+	SanitizeError,
+	UnexpectedType,
+	UndefinedAttribute,
+	ObjectError
+} from "../src/exception"
 import assert from "assert"
 
 describe("sanitize", () => {
@@ -46,9 +53,11 @@ describe("sanitize", () => {
 				sanitize(description)(object)
 				assert(false)
 			} catch(e) {
-				assert(e instanceof UnexpectedType, "Wrong type provided.")
-				assert(e.description === description)
-				assert(e.property === "1")
+				assert(e instanceof SanitizeError, "Always throw a sanitize error")
+				const reason = e.error
+				assert(reason instanceof UnexpectedType, "Wrong type provided.")
+				assert(reason.description === description)
+				assert(reason.property === "1")
 			}
 		})
 	})
@@ -65,9 +74,11 @@ describe("sanitize", () => {
 				sanitize(description)(object)
 				assert(false)
 			} catch(e) {
-				assert(e instanceof UnexpectedType, "Wrong type provided.")
-				assert(e.description === description)
-				assert(e.property === 1)
+				assert(e instanceof SanitizeError, "Always throw a sanitize error")
+				const reason = e.error
+				assert(reason instanceof UnexpectedType, "Wrong type provided.")
+				assert(reason.description === description)
+				assert(reason.property === 1)
 			}
 		})
 	})
@@ -84,9 +95,11 @@ describe("sanitize", () => {
 				sanitize(description)(object)
 				assert(false)
 			} catch(e) {
-				assert(e instanceof UnexpectedType, "Wrong type provided.")
-				assert(e.description === description)
-				assert(e.property === "true")
+				assert(e instanceof SanitizeError, "Always throw a sanitize error")
+				const reason = e.error
+				assert(reason instanceof UnexpectedType, "Wrong type provided.")
+				assert(reason.description === description)
+				assert(reason.property === "true")
 			}
 		})
 		it("fallback", () => {
@@ -117,10 +130,12 @@ describe("sanitize", () => {
 				sanitize(description)(object)
 				assert(false)
 			} catch(e) {
-				assert(e instanceof SanitizeError, "Wrong type provided.")
-				assert.deepEqual(e.key_chain, [ "a" ])
-				assert(e.error instanceof UnexpectedType)
-				assert.deepEqual(e.error, { description: { type: "number" }, property: "1" })
+				assert(e instanceof SanitizeError, "Always throw a sanitize error")
+				const reason = e.error
+				assert(reason instanceof ObjectError, "Wrong type provided.")
+				assert.deepEqual(reason.key_chain, [ "a" ])
+				assert(reason.error instanceof UnexpectedType)
+				assert.deepEqual(reason.error, { description: { type: "number" }, property: "1" })
 			}
 		})
 		it("error field missing", () => {
@@ -131,10 +146,12 @@ describe("sanitize", () => {
 				sanitize(description)(object)
 				assert(false)
 			} catch(e) {
-				assert(e instanceof SanitizeError, "Field missing.")
-				assert.deepEqual(e.key_chain, [ "b" ])
-				assert(e.error instanceof UndefinedAttribute)
-				assert.deepEqual(e.error,
+				assert(e instanceof SanitizeError, "Always throw a sanitize error")
+				const reason = e.error
+				assert(reason instanceof ObjectError, "Field missing.")
+				assert.deepEqual(reason.key_chain, [ "b" ])
+				assert(reason.error instanceof UndefinedAttribute)
+				assert.deepEqual(reason.error,
 					{ description: { type: "string" }, property: undefined })
 			}
 		})
@@ -164,9 +181,37 @@ describe("sanitize", () => {
 			const o = [ "1", "2", "3", "4" ]
 			try {
 				sanitize(description)(o)
+				assert(false)
 			} catch(e) {
-				assert(e instanceof UnexpectedType)
-				assert.deepEqual(e, { description: { type: "number" }, property: "1" })
+				assert(e instanceof SanitizeError, "Always throw a sanitize error")
+				const reason = e.error
+				assert(reason instanceof UnexpectedType)
+				assert.deepEqual(reason, { description: { type: "number" }, property: "1" })
+			}
+		})
+	})
+	describe("variant", () => {
+		const description = variant([ number(), string() ])
+		it("first variant", () => {
+			const o = 42
+			const result = sanitize(description)(o)
+			const v0 = get_variant(0)(result)
+			assert(v0 === 42, "Check expected value of first variant")
+		})
+		it("second variant", () => {
+			const o = "42"
+			const result = sanitize(description)(o)
+			const v1 = get_variant(1)(result)
+			assert(v1 === "42", "Check expected value of first variant")
+		})
+		it("choosing the wrong variant", () => {
+			const o = 42
+			const result = sanitize(description)(o)
+			try {
+				get_variant(1)(result)
+				assert(false)
+			} catch(e) {
+				assert(e instanceof TypeError, "Wrong variant")
 			}
 		})
 	})

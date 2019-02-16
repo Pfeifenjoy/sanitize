@@ -24,7 +24,6 @@ export const array = (element_description: Description, config: ?Config = { }): 
 	...config
 })
 
-
 export const string = (config: ?Config = { }): Description => ({
 	type: "string",
 	...config
@@ -41,3 +40,8 @@ export const number = (config: ?Config = { }): Description => ({
 })
 
 export const NULL: Description = { type: "null" }
+
+export const variant = (alternatives: Array<Description>): Description => ({
+	type: "variant",
+	alternatives
+})
