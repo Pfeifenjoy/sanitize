@@ -7,7 +7,7 @@
     "test": "npm run test:flow && npm run test:lint && npm run test:mocha",
     "test:flow": "flow",
     "test:lint": "eslint src",
-    "test:mocha": "mocha --require @babel/register --require @babel/polyfill --use_strict",
+    "test:mocha": "mocha --use_strict --require @babel/register --require @babel/polyfill",
     "build": "npm run build:babel && npm run build:flow",
     "build:babel": "babel src --out-dir build",
     "build:flow": "flow-copy-source src build",

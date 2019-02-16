@@ -1,6 +1,6 @@
 //@flow
 
-import type { Description, Children, Type } from "./sanitize"
+import type { Description, Children, Type } from "./types"
 
 type Config = $Rest<Description, {| type: Type |}>
 

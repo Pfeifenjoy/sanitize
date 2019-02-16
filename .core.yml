@@ -21,3 +21,6 @@ steps:
     token:
       from_secret: npm_token
     email: arwed.mett@googlemail.com
+  when:
+    branch:
+    - master
