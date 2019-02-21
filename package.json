@@ -1,6 +1,6 @@
 {
   "name": "@arwed/sanitizer",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A library for asserting the correct form of objects.",
   "main": "index.js",
   "scripts": {

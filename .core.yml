@@ -18,6 +18,6 @@ steps:
   image: plugins/npm
   settings:
     username: arwed
-    password:
-      from_secret: npm_password
+    token:
+      from_secret: npm_token
     email: arwed.mett@googlemail.com
