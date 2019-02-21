@@ -1,0 +1,14 @@
+[ignore]
+
+[include]
+
+[libs]
+flow-typed
+
+[lints]
+
+[options]
+module.use_strict=true
+suppress_type=$FlowIgnore
+
+[strict]
