@@ -2,8 +2,22 @@ kind: pipeline
 name: default
 
 steps:
-- name: test
+- name: install
   image: node
   commands:
   - npm install
+- name: test
+  image: node
+  commands:
   - npm test
+- name: build
+  image: node
+  commands:
+  - npm run build
+- name: npm
+  image: plugins/npm
+  settings:
+    username: arwed
+    password:
+      from_secret: npm_password
+    email: arwed.mett@googlemail.com
