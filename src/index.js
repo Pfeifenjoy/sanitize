@@ -18,6 +18,7 @@ export {
 } from "./checker"
 
 export { default as default } from "./sanitize"
+
 export { object, array, number, string, boolean, NULL } from "./definition"
 
 export {
