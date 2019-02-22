@@ -1,14 +1,16 @@
 //@flow
 
 import assert from "assert"
+
 import { implies, iff } from "./util"
+
 import {
 	SanitizeError,
 	UndefinedAttribute,
 	UnexpectedType,
-	ConstraintError
+	ConstraintError,
+	Base as Exception
 } from "./exception"
-import Exception from "./exception/base"
 
 
 export type Type = "string" | "number" | "boolean" | "null" | "array" | "object"
