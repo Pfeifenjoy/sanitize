@@ -20,7 +20,15 @@ export {
 
 export { default as default } from "./sanitize"
 
-export { object, array, number, string, boolean, NULL } from "./definition"
+export {
+	object,
+	array,
+	number,
+	string,
+	boolean,
+	variant,
+	NULL
+} from "./definition"
 
 export {
 	get_string,
@@ -29,5 +37,6 @@ export {
 	get_null,
 	get_object,
 	get_array,
+	get_variant,
 	fallback
 } from "./getter"

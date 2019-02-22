@@ -7,7 +7,9 @@ import sanitize, {
 	number,
 	string,
 	boolean,
+	variant,
 	get_boolean,
+	get_variant,
 	fallback
 } from "../src"
 import {
@@ -185,6 +187,31 @@ describe("sanitize", () => {
 				const reason = e.error
 				assert(reason instanceof UnexpectedType)
 				assert.deepEqual(reason, { description: { type: "number" }, property: "1" })
+			}
+		})
+	})
+	describe("variant", () => {
+		const description = variant([ number(), string() ])
+		it("first variant", () => {
+			const o = 42
+			const result = sanitize(description)(o)
+			const v0 = get_variant(0)(result)
+			assert(v0 === 42, "Check expected value of first variant")
+		})
+		it("second variant", () => {
+			const o = "42"
+			const result = sanitize(description)(o)
+			const v1 = get_variant(1)(result)
+			assert(v1 === "42", "Check expected value of first variant")
+		})
+		it("choosing the wrong variant", () => {
+			const o = 42
+			const result = sanitize(description)(o)
+			try {
+				get_variant(1)(result)
+				assert(false)
+			} catch(e) {
+				assert(e instanceof TypeError, "Wrong variant")
 			}
 		})
 	})

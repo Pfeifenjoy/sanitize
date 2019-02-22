@@ -32,7 +32,7 @@ import {
  * Basic test for a description.
  */
 const assert_description = (description: Description) => {
-	assert(is_object(description) || is_attribute(description),
+	assert(is_object(description) || is_attribute(description) || is_variant(description),
 		`Unknown description type: ${ description.type }`)
 	assert(implies(!is_object(description))(description.children === undefined),
 		"Ill formed description: Only Objects can have children.")
