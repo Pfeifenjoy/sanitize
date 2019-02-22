@@ -2,7 +2,7 @@
 
 export type { Description, Type, Property, Children } from "./sanitize"
 export { default as default } from "./sanitize"
-export { object, array, number, string, boolean, NULL } from "./easy"
+export { object, array, number, string, boolean, NULL } from "./definition"
 export {
 	get_string,
 	get_number,

@@ -4,26 +4,21 @@ import assert from "assert"
 
 import { implies, iff } from "./util"
 
+//import all possible errors
 import {
 	SanitizeError,
 	UndefinedAttribute,
 	UnexpectedType,
 	ConstraintError,
-	Base as Exception
+	Exception
 } from "./exception"
 
+//import types
+import type {
+	Property,
+	Description
+} from "./types"
 
-export type Type = "string" | "number" | "boolean" | "null" | "array" | "object"
-export type Property = string | number | boolean | Array<*> | null
-export type Children = Map<string, Description>
-export type Description = {
-	type: Type,
-	optional?: boolean,
-	constraint?: Property => boolean,
-	default?: Property,
-	children?: Children,
-	element_description?: Description
-}
 
 const is_object = ({ type }: Description): boolean => type === "object"
 const is_attribute = ({ type }: Description): boolean =>
