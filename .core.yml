@@ -2,18 +2,25 @@ kind: pipeline
 name: default
 
 steps:
+
 - name: install
   image: node
   commands:
   - npm install
+
 - name: test
   image: node
   commands:
   - npm test
+
 - name: build
   image: node
   commands:
   - npm run build
+  volumes:
+  - name: cache
+    path: ./build
+
 - name: npm
   image: plugins/npm
   settings:
@@ -27,3 +34,6 @@ steps:
     event:
       exclude:
       - pull_request
+  volumes:
+  - name: cache
+    path: ./build
