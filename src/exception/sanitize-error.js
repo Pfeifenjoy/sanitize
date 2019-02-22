@@ -1,6 +1,6 @@
 //@flow
 
-import { Base, DescriptionError } from "."
+import { Exception as Base, DescriptionError } from "."
 
 export default class SanitizeError extends Base {
 	key_chain: Array<string>

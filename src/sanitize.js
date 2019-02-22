@@ -4,7 +4,6 @@ import assert from "assert"
 
 import { implies, iff } from "./util"
 
-//import all possible errors
 import {
 	SanitizeError,
 	UndefinedAttribute,
@@ -13,17 +12,15 @@ import {
 	Exception
 } from "./exception"
 
-//import types
 import type {
 	Property,
 	Description
 } from "./types"
 
-
-const is_object = ({ type }: Description): boolean => type === "object"
-const is_attribute = ({ type }: Description): boolean =>
-	type === "string" || type === "number" || type === "boolean" || type === "null"
-		|| type === "array"
+import {
+	is_object,
+	is_attribute
+} from "./checker"
 
 /**
  * Basic test for a description.

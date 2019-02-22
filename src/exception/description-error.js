@@ -1,7 +1,7 @@
 //@flow
 
-import { Base } from "."
-import type { Description } from "../sanitize"
+import { Exception as Base } from "."
+import type { Description } from "../types"
 
 export default class DescriptionError extends Base {
 	description: Description
