@@ -33,7 +33,7 @@ steps:
     NPM_TOKEN:
       from_secret: npm_token
   commands:
-    - if [ "$(npm view @arwed/sanitize dist-tags.latest)" = "$(node -p -e "require('./package.json').version")" ]; then npm whoami & npm publish; else echo not publishing; fi
+    - if [ "$(npm view @arwed/sanitize dist-tags.latest)" = "$(node -p -e "require('./package.json').version")" ]; then echo not publishing; else npm whoami & npm publish; fi
   when:
     branch:
     - master
