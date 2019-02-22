@@ -5,39 +5,40 @@ steps:
 
 - name: install
   image: node
+  environment:
+    NPM_TOKEN:
+      from_secret: npm_token
   commands:
   - npm install
 
 - name: test
   image: node
+  environment:
+    NPM_TOKEN:
+      from_secret: npm_token
   commands:
   - npm test
 
 - name: build
   image: node
+  environment:
+    NPM_TOKEN:
+      from_secret: npm_token
   commands:
   - npm run build
-  volumes:
-  - name: cache
-    path: /drone/src/build
 
-- name: npm
-  image: plugins/npm
-  settings:
-    username: arwed
-    token:
+- name: publish
+  image: node
+  environment:
+    NPM_TOKEN:
       from_secret: npm_token
-    email: arwed.mett@googlemail.com
+  commands:
+    - ls -lisah
+    - npm whoami
+    - npm publish
   when:
     branch:
     - master
     event:
       exclude:
       - pull_request
-  volumes:
-  - name: cache
-    path: /drone/src/build
-
-volumes:
-- name: cache
-  temp: {}

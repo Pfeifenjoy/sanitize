@@ -3,6 +3,9 @@
   "version": "0.0.6",
   "description": "A library for asserting the correct form of objects.",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "npm run test:flow && npm run test:lint && npm run test:mocha",
     "test:flow": "flow --quiet",
