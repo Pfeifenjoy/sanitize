@@ -1,3 +1,3 @@
 //@flow
 
-export type Type = "string" | "number" | "boolean" | "null" | "array" | "object"
+export type Type = "string" | "number" | "boolean" | "null" | "array" | "object" | "variant"

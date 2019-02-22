@@ -48,6 +48,15 @@ export const get_array = (x: any): Array<any> => {
 	}
 }
 
+export const get_variant = (index: number) => (x: any) => {
+	const object = get_object(x)
+	if(object.variant === index) {
+		return object.data
+	} else {
+		throw new TypeError("Expected variant")
+	}
+}
+
 export const fallback = (getter: *) => (alternative: *) => (expected: any) => {
 	try {
 		return getter(expected)

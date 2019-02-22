@@ -14,7 +14,8 @@ export {
 	is_array,
 	is_null,
 	is_boolean,
-	is_attribute
+	is_attribute,
+	is_variant
 } from "./checker"
 
 export { default as default } from "./sanitize"
